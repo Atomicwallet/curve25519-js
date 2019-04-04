@@ -1433,4 +1433,20 @@ axlsign.generateKeyPair = function(seed) {
   };
 };
 
+/**
+ * @param {Uint8Array} privateKey
+ * @returns {Uint8Array}
+ */
+axlsign.getPublicKeyFromPrivate = function(privateKey) {
+  checkArrayTypes(privateKey);
+  if (privateKey.length !== 32) throw new Error('wrong private key array length');
+
+  var publicKey = new Uint8Array(32);
+  crypto_scalarmult_base(publicKey, privateKey);
+
+  publicKey[31] &= 127;
+
+  return publicKey;
+};
+
 })(typeof module !== 'undefined' && module.exports ? module.exports : (self.axlsign = self.axlsign || {}));
